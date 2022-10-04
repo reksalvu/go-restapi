@@ -12,7 +12,13 @@ import (
 func Get_Schedules(c *gin.Context) {
 	var schedules []models.Schedule
 
-	models.DB.Model(&schedules).Preload("Activities").Find(&schedules)
+	if title := c.DefaultQuery("title", ""); title == "" {
+		models.DB.Model(&schedules).Preload("Activities").Find(&schedules)
+	} else {
+		title = "%" + title + "%"
+		models.DB.Model(&schedules).Preload("Activities").Where("title LIKE ?", title).Find(&schedules)
+	}
+
 	c.JSON(http.StatusOK, gin.H{"code": http.StatusOK, "data": schedules})
 }
 
