@@ -15,7 +15,7 @@ func Get_Schedules(c *gin.Context) {
 	if title := c.DefaultQuery("title", ""); title == "" {
 		models.DB.Model(&schedules).Preload("Activities").Find(&schedules)
 	} else {
-		title = "%" + title + "%"
+		title := "%" + title + "%"
 		models.DB.Model(&schedules).Preload("Activities").Where("title LIKE ?", title).Find(&schedules)
 	}
 
